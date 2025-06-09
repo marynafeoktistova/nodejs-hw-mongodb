@@ -22,8 +22,13 @@ export const setupServer = () => {
       },
     }),
   );
+  app.get('/', (req, res) => {
+    res.status(200).json({
+      message: `Server is running`,
+    });
+  });
 
-  app.get('/contacts', async (req, res, next) => {
+  app.get('/contacts', async (req, res) => {
     try {
       const contacts = await getAllContacts();
       res.status(200).json({
@@ -36,7 +41,7 @@ export const setupServer = () => {
     }
   });
 
-  app.get('/contacts/:contactId', async (req, res, next) => {
+  app.get('/contacts/:contactId', async (req, res) => {
     try {
       const { contactId } = req.params;
       const contact = await getContactById(contactId);
