@@ -4,7 +4,7 @@ import express from 'express';
 import pino from 'pino-http';
 import cors from 'cors';
 import { getEnvVar } from './utils/getEnvVar.js';
-import { getAllContacts, getContactById } from './db/services/contacts.js';
+import { getAllContacts, getContactById } from '../src/services/contacts.js';
 import { Contact } from './db/models/contact.js';
 
 const PORT = Number(getEnvVar('PORT', '3000'));
