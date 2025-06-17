@@ -8,19 +8,22 @@ import { errorHandler } from './middlewares/errorHandler.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
-const app = express();
-const PORT = Number(getEnvVar('PORT', '3000'));
 
-app.use(express.json());
-app.use(cors());
-app.use(pino({ transport: { target: 'pino-pretty' } }));
+export const startServer = () => {
+  const app = express();
+  const PORT = Number(getEnvVar('PORT', '3000'));
 
-app.use('/contacts', contactsRouter);
+  app.use(express.json());
+  app.use(cors());
+  app.use(pino({ transport: { target: 'pino-pretty' } }));
 
-app.use(notFoundHandler);
+  app.use('/contacts', contactsRouter);
 
-app.use(errorHandler);
+  app.use(notFoundHandler);
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+  app.use(errorHandler);
+
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
+};
