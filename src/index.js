@@ -1,4 +1,4 @@
-import { initMongoDbConnection } from './db/initMongoDbConnection.js';
+import { initMongoDbConnection } from './db/initMongoConnection.js';
 import { startServer } from './server.js';
 
 await initMongoDbConnection();
