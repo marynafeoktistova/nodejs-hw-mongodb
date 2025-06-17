@@ -1,9 +1,5 @@
-import { initMongoConnection } from './db/initMongoConnection.js';
-import dotenv from 'dotenv';
+import { initMongoDbConnection } from './db/initMongoDbConnection.js';
+import { startServer } from './server.js';
 
-dotenv.config();
-const bootstrap = async () => {
-  await initMongoConnection();
-};
-
-bootstrap();
+await initMongoDbConnection();
+startServer();
