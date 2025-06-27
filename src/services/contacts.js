@@ -1,6 +1,6 @@
 import { Contact } from '../db/models/contact.js';
 
-export const getContacts = async (query = {}) => {
+export const getContacts = async (userId, query = {}) => {
   const {
     page = 1,
     perPage = 10,
@@ -14,7 +14,7 @@ export const getContacts = async (query = {}) => {
   const limit = Number(perPage);
   const sort = { [sortBy]: sortOrder === 'desc' ? -1 : 1 };
 
-  const filter = {};
+  const filter = { userId };
 
   if (type) {
     filter.contactType = type;
@@ -43,11 +43,13 @@ export const getContacts = async (query = {}) => {
   };
 };
 
-export const getContactById = (id) => Contact.findById(id);
+export const getContactById = (id, userId) =>
+  Contact.findOne({ _id: id, userId });
 
 export const createContact = (data) => Contact.create(data);
 
-export const updateContact = (id, data) =>
-  Contact.findByIdAndUpdate(id, data, { new: true });
+export const updateContact = (id, userId, data) =>
+  Contact.findOneAndUpdate({ _id: id, userId }, data, { new: true });
 
-export const deleteContact = (id) => Contact.findByIdAndDelete(id);
+export const deleteContact = (id, userId) =>
+  Contact.findOneAndDelete({ _id: id, userId });
