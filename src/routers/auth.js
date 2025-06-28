@@ -16,9 +16,9 @@ router.post(
   ctrlWrapper(registerController),
 );
 
-router.post('/refresh', ctrlWrapper(refreshController));
-
 router.post('/login', validateBody(loginSchema), ctrlWrapper(loginController));
+
+router.post('/refresh', ctrlWrapper(refreshController));
 
 router.post('/logout', ctrlWrapper(logoutController));
 
