@@ -28,4 +28,5 @@ export const authenticate = (req, res, next) => {
   } catch (error) {
     next(error);
   }
+  console.log('Authorization Header:', req.headers.authorization);
 };

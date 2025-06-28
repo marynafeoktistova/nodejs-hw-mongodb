@@ -63,7 +63,6 @@ export const loginUser = async ({ email, password }) => {
   return { accessToken, refreshToken };
 };
 
-// -------------------- ОНОВЛЕННЯ СЕСІЇ --------------------
 export const refreshSession = async (oldRefreshToken) => {
   if (!oldRefreshToken) throw createError(401, 'Refresh token missing');
 

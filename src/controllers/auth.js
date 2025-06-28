@@ -22,6 +22,7 @@ export const registerController = async (req, res, next) => {
 
 export const loginController = async (req, res, next) => {
   try {
+    console.log('LOGIN BODY:', req.body);
     const { accessToken, refreshToken } = await loginUser(req.body);
 
     res.cookie('refreshToken', refreshToken, {
