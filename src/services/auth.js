@@ -33,12 +33,13 @@ export const loginUser = async ({ email, password }) => {
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) throw createError(401, 'Invalid email or password');
 
+  // Remove old session if exists
   await Session.findOneAndDelete({ userId: user._id });
 
-  const accessTokenValidUntil = new Date(Date.now() + 15 * 60 * 1000);
+  const accessTokenValidUntil = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
   const refreshTokenValidUntil = new Date(
     Date.now() + 30 * 24 * 60 * 60 * 1000,
-  );
+  ); // 30 days
 
   const accessToken = jwt.sign(
     { userId: user._id },
@@ -52,7 +53,7 @@ export const loginUser = async ({ email, password }) => {
     { expiresIn: '30d' },
   );
 
-  await Session.create({
+  const session = await Session.create({
     userId: user._id,
     accessToken,
     refreshToken,
@@ -60,15 +61,17 @@ export const loginUser = async ({ email, password }) => {
     refreshTokenValidUntil,
   });
 
-  return { accessToken, refreshToken };
+  return {
+    accessToken,
+    refreshToken,
+    sessionId: session._id.toString(),
+  };
 };
 
-// -------------------- ОНОВЛЕННЯ СЕСІЇ --------------------
 export const refreshSession = async (oldRefreshToken) => {
   if (!oldRefreshToken) throw createError(401, 'Refresh token missing');
 
   let payload;
-
   try {
     payload = jwt.verify(oldRefreshToken, getEnvVar('REFRESH_SECRET'));
   } catch {
@@ -78,6 +81,7 @@ export const refreshSession = async (oldRefreshToken) => {
   const session = await Session.findOne({ refreshToken: oldRefreshToken });
   if (!session) throw createError(401, 'Session not found');
 
+  // Remove old session
   await Session.deleteOne({ _id: session._id });
 
   const accessTokenValidUntil = new Date(Date.now() + 15 * 60 * 1000);
@@ -97,7 +101,7 @@ export const refreshSession = async (oldRefreshToken) => {
     { expiresIn: '30d' },
   );
 
-  await Session.create({
+  const newSession = await Session.create({
     userId: payload.userId,
     accessToken: newAccessToken,
     refreshToken: newRefreshToken,
@@ -105,22 +109,15 @@ export const refreshSession = async (oldRefreshToken) => {
     refreshTokenValidUntil,
   });
 
-  const user = await User.findById(payload.userId);
-  if (!user) throw createError(401, 'User not found');
-
   return {
     accessToken: newAccessToken,
-    refreshToken: newRefreshToken,
-    user: {
-      id: user._id,
-      name: user.name,
-      email: user.email,
-    },
+    newRefreshToken,
+    sessionId: newSession._id.toString(),
   };
 };
 
-export const logoutService = async (refreshToken) => {
-  const deletedSession = await Session.findOneAndDelete({ refreshToken });
+export const logoutService = async (sessionId) => {
+  const deletedSession = await Session.findByIdAndDelete(sessionId);
 
   if (!deletedSession) {
     throw createError(401, 'Session not found or already logged out');

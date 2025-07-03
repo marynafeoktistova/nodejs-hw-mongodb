@@ -19,15 +19,15 @@ export const startServer = () => {
   app.use(cors());
   app.use(pino({ transport: { target: 'pino-pretty' } }));
 
+  app.use(cookieParser());
+
+  app.use('/auth', authRouter);
+
   app.use('/contacts', contactsRouter);
 
   app.use(notFoundHandler);
 
   app.use(errorHandler);
-
-  app.use('/auth', authRouter);
-
-  app.use(cookieParser());
 
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

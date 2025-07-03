@@ -22,9 +22,16 @@ export const registerController = async (req, res, next) => {
 
 export const loginController = async (req, res, next) => {
   try {
-    const { accessToken, refreshToken } = await loginUser(req.body);
+    const { accessToken, refreshToken, sessionId } = await loginUser(req.body);
 
     res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+    });
+
+    res.cookie('sessionId', sessionId, {
       httpOnly: true,
       secure: true,
       sameSite: 'strict',
@@ -49,11 +56,18 @@ export const refreshController = async (req, res, next) => {
       throw createError(401, 'Refresh token missing');
     }
 
-    const { accessToken, newRefreshToken } = await refreshSession(
+    const { accessToken, newRefreshToken, sessionId } = await refreshSession(
       oldRefreshToken,
     );
 
     res.cookie('refreshToken', newRefreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+    });
+
+    res.cookie('sessionId', sessionId, {
       httpOnly: true,
       secure: true,
       sameSite: 'strict',
@@ -72,19 +86,16 @@ export const refreshController = async (req, res, next) => {
 
 export const logoutController = async (req, res, next) => {
   try {
-    const refreshToken = req.cookies?.refreshToken;
+    const sessionId = req.cookies?.sessionId;
 
-    if (!refreshToken) {
-      throw createError(401, 'Refresh token missing');
+    if (!sessionId) {
+      throw createError(401, 'Session ID missing');
     }
 
-    await logoutService(refreshToken);
+    await logoutService(sessionId);
 
-    res.clearCookie('refreshToken', {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'strict',
-    });
+    res.clearCookie('refreshToken');
+    res.clearCookie('sessionId');
 
     res.status(204).send();
   } catch (error) {
