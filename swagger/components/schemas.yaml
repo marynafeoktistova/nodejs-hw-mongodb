@@ -1,0 +1,48 @@
+Contact:
+  type: object
+  properties:
+    _id:
+      type: string
+      example: '64f1a3cb1bcd674c3e854b4d'
+    name:
+      type: string
+      example: 'John Doe'
+    email:
+      type: string
+      example: 'john@example.com'
+    phone:
+      type: string
+      example: '+380501234567'
+    photo:
+      type: string
+      example: 'https://res.cloudinary.com/demo/image/upload/v1234567890/sample.jpg'
+
+Error400:
+  type: object
+  properties:
+    status:
+      type: integer
+      example: 400
+    message:
+      type: string
+      example: 'Bad Request'
+
+Error401:
+  type: object
+  properties:
+    status:
+      type: integer
+      example: 401
+    message:
+      type: string
+      example: 'Unauthorized'
+
+Error404:
+  type: object
+  properties:
+    status:
+      type: integer
+      example: 404
+    message:
+      type: string
+      example: 'Not Found'

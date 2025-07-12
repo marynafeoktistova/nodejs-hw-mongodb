@@ -1,0 +1,88 @@
+tags:
+  - Contacts
+summary: Create a new contact
+operationId: createContact
+description: Створити новий контакт для авторизованого користувача.
+security:
+  - bearerAuth: []
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          name:
+            type: string
+            example: 'Alice Smith'
+          email:
+            type: string
+            example: 'alice@example.com'
+          phoneNumber:
+            type: string
+            example: '380501234567'
+          photo:
+            type: string
+            example: 'https://res.cloudinary.com/demo/image/upload/v123/sample.jpg'
+          contactType:
+            type: string
+            enum: [personal, home, work]
+            example: personal
+          isFavourite:
+            type: boolean
+            example: false
+        required:
+          - name
+          - phoneNumber
+          - contactType
+responses:
+  '201':
+    description: Контакт успішно створено
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: 'Successfully found contacts!'
+            data:
+              type: object
+              properties:
+                data:
+                  type: array
+                  items:
+                    $ref: ../../components/schemas.yaml
+                page:
+                  type: integer
+                  example: 1
+                perPage:
+                  type: integer
+                  example: 10
+                totalItems:
+                  type: integer
+                  example: 25
+                totalPages:
+                  type: integer
+                  example: 3
+                hasPreviousPage:
+                  type: boolean
+                  example: false
+                hasNextPage:
+                  type: boolean
+                  example: true
+  '400':
+    description: Невірний формат даних
+    content:
+      application/json:
+        schema:
+          $ref: '../../components/schemas.yaml'
+  '401':
+    description: Неавторизований доступ
+    content:
+      application/json:
+        schema:
+          $ref: '../../components/schemas.yaml'
