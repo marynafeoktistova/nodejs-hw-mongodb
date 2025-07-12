@@ -1,0 +1,108 @@
+tags:
+  - Contacts
+summary: Get list of contacts
+operationId: getContacts
+description: Отримати перелік контактів користувача з можливістю фільтрації, сортування та пагінації.
+security:
+  - bearerAuth: []
+parameters:
+  - name: page
+    in: query
+    required: false
+    description: 'Номер сторінки (default: 1)'
+    schema:
+      type: integer
+      example: 1
+  - name: perPage
+    in: query
+    required: false
+    description: 'Кількість елементів на сторінці (default: 10)'
+    schema:
+      type: integer
+      example: 10
+  - name: sortBy
+    in: query
+    required: false
+    description: Поле для сортування (name, email тощо)
+    schema:
+      type: string
+      example: name
+  - name: sortOrder
+    in: query
+    required: false
+    description: Напрям сортування (asc|desc)
+    schema:
+      type: string
+      enum:
+        - asc
+        - desc
+      example: asc
+  - name: type
+    in: query
+    required: false
+    description: Фільтр за типом контакту (personal, home, work)
+    schema:
+      type: string
+      enum:
+        - personal
+        - home
+        - work
+      example: personal
+  - name: isFavourite
+    in: query
+    required: false
+    description: Фільтр за улюбленими (true|false)
+    schema:
+      type: boolean
+      example: false
+responses:
+  '200':
+    description: Перелік контактів
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: 'Successfully found contacts!'
+            data:
+              type: object
+              properties:
+                data:
+                  type: array
+                  items:
+                    $ref: ../../components/schemas.yaml
+                page:
+                  type: integer
+                  example: 1
+                perPage:
+                  type: integer
+                  example: 10
+                totalItems:
+                  type: integer
+                  example: 25
+                totalPages:
+                  type: integer
+                  example: 3
+                hasPreviousPage:
+                  type: boolean
+                  example: false
+                hasNextPage:
+                  type: boolean
+                  example: true
+  '400':
+    description: Невірні параметри запиту
+    content:
+      application/json:
+        schema:
+          $ref: '../../components/schemas.yaml'
+  '401':
+    description: Неавторизований доступ
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas.yaml
