@@ -1,88 +1,49 @@
 tags:
   - Contacts
-summary: Create a new contact
+summary: Create contact
 operationId: createContact
-description: Створити новий контакт для авторизованого користувача.
+description: 'Create a contact with payload'
 security:
   - bearerAuth: []
+
 requestBody:
-  required: true
   content:
-    application/json:
+    multipart/form-data:
       schema:
         type: object
-        properties:
-          name:
-            type: string
-            example: 'Alice Smith'
-          email:
-            type: string
-            example: 'alice@example.com'
-          phoneNumber:
-            type: string
-            example: '380501234567'
-          photo:
-            type: string
-            example: 'https://res.cloudinary.com/demo/image/upload/v123/sample.jpg'
-          contactType:
-            type: string
-            enum: [personal, home, work]
-            example: personal
-          isFavourite:
-            type: boolean
-            example: false
         required:
           - name
           - phoneNumber
           - contactType
+        properties:
+          name:
+            description: "Contact's name"
+            type: string
+            example: 'John Smith'
+          phoneNumber:
+            description: "Contact's phone number"
+            type: string
+            example: '+380937896543'
+          email:
+            description: "Contact's email (optional)"
+            type: string
+            example: 'john@smith.com'
+          isFavourite:
+            description: 'Is contact in favourites'
+            type: boolean
+            example: false
+          contactType:
+            description: 'Type of contact'
+            type: string
+            enum: ['work', 'home', 'personal']
+            example: 'personal'
+          photo:
+            description: "Contact's photo file"
+            type: string
+            format: binary
+
 responses:
   '201':
-    description: Контакт успішно створено
-    content:
-      application/json:
-        schema:
-          type: object
-          properties:
-            status:
-              type: integer
-              example: 200
-            message:
-              type: string
-              example: 'Successfully found contacts!'
-            data:
-              type: object
-              properties:
-                data:
-                  type: array
-                  items:
-                    $ref: ../../components/schemas.yaml
-                page:
-                  type: integer
-                  example: 1
-                perPage:
-                  type: integer
-                  example: 10
-                totalItems:
-                  type: integer
-                  example: 25
-                totalPages:
-                  type: integer
-                  example: 3
-                hasPreviousPage:
-                  type: boolean
-                  example: false
-                hasNextPage:
-                  type: boolean
-                  example: true
-  '400':
-    description: Невірний формат даних
-    content:
-      application/json:
-        schema:
-          $ref: '../../components/schemas.yaml'
+    $ref: '../../components/schemas/contact/201.yaml'
   '401':
-    description: Неавторизований доступ
-    content:
-      application/json:
-        schema:
-          $ref: '../../components/schemas.yaml'
+    $ref: '../../components/schemas/401.yaml'

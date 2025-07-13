@@ -1,33 +1,21 @@
 tags:
   - Contacts
-summary: Delete a contact by ID
-operationId: deleteContactById
-description: Видалити контакт за його унікальним ідентифікатором.
+summary: Delete contact by id
+operationId: deleteContact
+description: 'Delete contact by id'
 security:
   - bearerAuth: []
 parameters:
-  - name: contactId
-    in: path
+  - in: path
+    name: id
     required: true
-    description: Унікальний ідентифікатор контакту
     schema:
       type: string
+      example: '68682b958a05bc3855c08c90'
 responses:
   '204':
-    description: Контакт успішно видалено (No Content)
+    description: Contact successfully deleted, no content returned
+  '401':
+    $ref: ../../../components/schemas/401.yaml
   '404':
-    description: Контакт не знайдено
-    content:
-      application/json:
-        schema:
-          type: object
-          properties:
-            status:
-              type: integer
-              example: 404
-            message:
-              type: string
-              example: 'Contact not found'
-            data:
-              type: string
-              example: 'Not Found'
+    $ref: ../../../components/schemas/contact/404.yaml
