@@ -1,0 +1,48 @@
+description: User successfully registered
+content:
+  application/json:
+    schema:
+      type: object
+      required:
+        - status
+        - message
+        - data
+      properties:
+        status:
+          type: integer
+          example: 201
+        message:
+          type: string
+          example: Successfully registered a user!
+        data:
+          type: object
+          required:
+            - _id
+            - name
+            - email
+            - createdAt
+            - updatedAt
+          properties:
+            _id:
+              type: string
+              example: 686917faece272aae1875c29
+              description: User ID
+            name:
+              type: string
+              example: John
+              description: User's name
+            email:
+              type: string
+              format: email
+              example: 9123123@123gmail.com
+              description: User's email
+            createdAt:
+              type: string
+              format: date-time
+              example: 2025-07-05T12:18:02.095Z
+              description: User creation date
+            updatedAt:
+              type: string
+              format: date-time
+              example: 2025-07-05T12:18:02.095Z
+              description: User update date

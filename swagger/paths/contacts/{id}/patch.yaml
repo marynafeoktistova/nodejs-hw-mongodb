@@ -1,98 +1,69 @@
 tags:
   - Contacts
-summary: Update a contact by ID
-operationId: updateContactById
-description: Оновити інформацію про контакт за його унікальним ідентифікатором.
+summary: Update contact partially
+operationId: patchContact
+description: 'Update some fields of a contact by id'
 security:
   - bearerAuth: []
 parameters:
-  - name: contactId
-    in: path
+  - in: path
+    name: id
     required: true
-    description: Унікальний ідентифікатор контакту
     schema:
       type: string
+      example: '68682b958a05bc3855c08c90'
 requestBody:
-  required: true
-  description: Поля для оновлення контакту (хоча б одне)
   content:
-    application/json:
+    multipart/form-data:
       schema:
         type: object
         properties:
           name:
             type: string
-            example: 'Updated Name'
+            description: "Contact's name"
+            example: 'John Smith'
+          phoneNumber:
+            type: string
+            description: "Contact's phone number"
+            example: '+380931898098'
           email:
             type: string
-            example: 'updated@example.com'
-          phone:
-            type: string
-            example: '+380501234567'
-          photo:
-            type: string
-            example: 'https://res.cloudinary.com/demo/image/upload/v123/sample.jpg'
+            description: "Contact's email"
+            example: 'john@smith.com'
           isFavourite:
             type: boolean
-            example: true
+            description: 'Is contact in favourites'
+            example: false
           contactType:
             type: string
-            enum: [personal, home, work]
-        minProperties: 1
+            enum: [work, home, personal]
+            description: 'Type of contact'
+            example: personal
+          photo:
+            type: string
+            format: binary
+            description: "Contact's photo file"
 responses:
   '200':
-    description: Перелік контактів
+    description: Successfully patched a contact
     content:
       application/json:
         schema:
           type: object
+          required:
+            - status
+            - message
+            - data
           properties:
             status:
               type: integer
               example: 200
             message:
               type: string
-              example: 'Successfully found contacts!'
+              example: Successfully patched a contact!
             data:
-              type: object
-              properties:
-                data:
-                  type: array
-                  items:
-                    $ref: ../../../components/schemas.yaml
-                page:
-                  type: integer
-                  example: 1
-                perPage:
-                  type: integer
-                  example: 10
-                totalItems:
-                  type: integer
-                  example: 25
-                totalPages:
-                  type: integer
-                  example: 3
-                hasPreviousPage:
-                  type: boolean
-                  example: false
-                hasNextPage:
-                  type: boolean
-                  example: true
-  '400':
-    description: Невірний формат даних
-    content:
-      application/json:
-        schema:
-          $ref: '../../../components/schemas.yaml'
+              $ref: ../../../components/schemas/contact.yaml
   '401':
-    description: Неавторизований доступ
-    content:
-      application/json:
-        schema:
-          $ref: '../../../components/schemas.yaml'
+    $ref: ../../../components/schemas/401.yaml
   '404':
-    description: Контакт не знайдено
-    content:
-      application/json:
-        schema:
-          $ref: ../../../components/schemas.yaml
+    $ref: ../../../components/schemas/contact/404.yaml

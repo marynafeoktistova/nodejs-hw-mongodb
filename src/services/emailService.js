@@ -27,7 +27,6 @@ export const sendResetPasswordEmail = async (to, token) => {
     console.log('Email sent:', info.response);
     return info;
   } catch (error) {
-    console.error('❌ Email sending error:', error); // Ось тут побачимо справжню причину
     throw new Error('Failed to send the email, please try again later.');
   }
 };

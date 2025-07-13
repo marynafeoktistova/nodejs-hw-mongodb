@@ -9,7 +9,6 @@ const __dirname = dirname(__filename);
 
 const tempDir = path.join(__dirname, '../temp');
 
-// створюємо тимчасову директорію, якщо не існує
 if (!fs.existsSync(tempDir)) {
   fs.mkdirSync(tempDir);
 }
