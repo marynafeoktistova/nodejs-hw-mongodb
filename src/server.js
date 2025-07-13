@@ -7,6 +7,7 @@ import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import authRouter from './routers/auth.js';
 import cookieParser from 'cookie-parser';
+import { UPLOAD_DIR } from '../src/utils/uploadDir.js';
 import { swaggerDocs } from '../src/middlewares/swaggerDocs.js';
 
 export const startServer = () => {
@@ -21,6 +22,10 @@ export const startServer = () => {
 
   app.use('/uploads', express.static(UPLOAD_DIR));
   app.use('/api-docs', swaggerDocs());
+
+  app.get('/', (req, res) => {
+    res.json({ status: 200, message: 'Contacts API is running' });
+  });
 
   app.use('/auth', authRouter);
 
